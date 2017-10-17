@@ -19,7 +19,13 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		//Keep moving forwards infinitely
 		transform.Translate(userDirection * movespeed * Time.deltaTime); 
+
+
+		if (transform.position.x >= 8.0f) {
+			transform.position = new Vector3 (-8.0f, transform.position.y, transform.position.z);
+		}
 
 		/*if left side of screen touched
 		 * player jump
