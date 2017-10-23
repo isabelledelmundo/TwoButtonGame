@@ -61,4 +61,22 @@ public class Player : MonoBehaviour {
 			isGrounded = true;
 		}
 	}
+
+	//Code to check the value of the coin being picked up
+	void OnTriggerEnter2D(Collider2D col){
+
+		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+		if (col.gameObject.tag == "GoldCoin") {
+			//add 1 point
+			Destroy(col.gameObject);
+		}
+		else if (col.gameObject.tag == "RubyCoin") {
+			//add 10 point
+			Destroy(col.gameObject);
+		}
+		else if (col.gameObject.tag == "DiamondCoin") {
+			//add 50 point
+			Destroy(col.gameObject);
+		}
+	}
 }
