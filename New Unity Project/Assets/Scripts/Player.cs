@@ -1,21 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
+using UnityEngine.UI;
 
 
 public class Player : MonoBehaviour {
 
-	public int movespeed = 1;
+	public float movespeed;
 	public float jumpSpeed;
-	private Vector3 userDirection = Vector3.right;
-	private bool isGrounded = true;
+	private bool isGrounded;
+	public Text scoreText;
+	private int score;
+
+	//Variables for gun shooting, might change these to a different class later if choose to add new weapons
+	public float damage = 10;
+	public LayerMask whatToHit;
+	float timeToFire = 0;
+	Vector2 shootDir = Vector2.right;
+	Transform firePoint;
+	public Transform bulletTrail;
 
 
 	// Use this for initialization
 	void Start () {
-		
+		score = 0;
+		isGrounded = true;
+		firePoint = transform.FindChild ("FirePoint");
 		
 	}
 	
@@ -23,6 +33,9 @@ public class Player : MonoBehaviour {
 	void Update () {
 
 		Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+		//Updating the score text
+		scoreText.text = score.ToString ();
 
 		//Keep moving forwards infinitely
 		transform.Translate(Vector2.right * movespeed * Time.deltaTime);
@@ -47,7 +60,9 @@ public class Player : MonoBehaviour {
 			}
 			else
 			{
-				//shoot
+				Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
+				RaycastHit2D hit = Physics2D.Raycast (firePointPosition, shootDir, 100, whatToHit);
+				Instantiate (bulletTrail, firePoint.position, firePoint.rotation);
 			}
 		}
 
@@ -67,16 +82,16 @@ public class Player : MonoBehaviour {
 
 		Rigidbody2D rb = GetComponent<Rigidbody2D>();
 		if (col.gameObject.tag == "GoldCoin") {
-			//add 1 point
+			score++;	//Worth 1 point
 			Destroy(col.gameObject);
 		}
 		else if (col.gameObject.tag == "RubyCoin") {
-			//add 10 point
+			score += 10;	//Worth 10 points
 			Destroy(col.gameObject);
 		}
 		else if (col.gameObject.tag == "DiamondCoin") {
-			//add 50 point
-			Destroy(col.gameObject);
+			score += 50;	//Worth 50 points
+
 		}
 	}
 }
