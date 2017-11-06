@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
 	void Start () {
 		score = 0;
 		isGrounded = true;
-		firePoint = transform.FindChild ("FirePoint");
+		firePoint = transform.Find ("FirePoint");
 		skip = true;
 		
 	}
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour {
 						rb.velocity += jumpSpeed * Vector2.up;
 						isGrounded = false;
 					}
-				} else {
+				} else if (Time.deltaTime>0.0001) {
 					Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
 					RaycastHit2D hit = Physics2D.Raycast (firePointPosition, shootDir, 100, whatToHit);
 					Instantiate (bulletTrail, firePoint.position, firePoint.rotation);
@@ -91,10 +91,10 @@ public class Player : MonoBehaviour {
 			score++;	//Worth 1 point
 			Destroy (col.gameObject);
 		} else if (col.gameObject.tag == "RubyCoin") {
-			score += 10;	//Worth 10 points
+			score += 3;	//Worth 10 points
 			Destroy (col.gameObject);
 		} else if (col.gameObject.tag == "DiamondCoin") {
-			score += 50;	//Worth 50 points
+			score += 10;	//Worth 50 points
 			Destroy (col.gameObject);
 		} else if (col.gameObject.tag == "Enemy") {
 			bank += score;
