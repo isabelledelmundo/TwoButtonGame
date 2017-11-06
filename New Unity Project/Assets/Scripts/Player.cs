@@ -9,8 +9,13 @@ public class Player : MonoBehaviour {
 	public float movespeed;
 	public float jumpSpeed;
 	private bool isGrounded;
+
 	public Text scoreText;
+	public Text bankText;
 	private int score;
+	private int bank;
+
+	private bool skip; //Use to not jump when player hits play button
 
 	//Variables for gun shooting, might change these to a different class later if choose to add new weapons
 	public float damage = 10;
@@ -26,6 +31,7 @@ public class Player : MonoBehaviour {
 		score = 0;
 		isGrounded = true;
 		firePoint = transform.FindChild ("FirePoint");
+		skip = true;
 		
 	}
 	
@@ -51,19 +57,19 @@ public class Player : MonoBehaviour {
 		if (Input.GetMouseButtonDown(0)/*Input.touchCount == 1*/)
 		{
 			var touch = Input.mousePosition.x/*Input.touches[0]*/;
-			if (touch/*.position.x*/ < Screen.width/2)
-			{
-				if (isGrounded) {
-					rb.velocity += jumpSpeed * Vector2.up;
-					isGrounded = false;
+			if (!skip) {
+				if (touch/*.position.x*/ < Screen.width / 2) {
+					if (isGrounded) {
+						rb.velocity += jumpSpeed * Vector2.up;
+						isGrounded = false;
+					}
+				} else {
+					Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
+					RaycastHit2D hit = Physics2D.Raycast (firePointPosition, shootDir, 100, whatToHit);
+					Instantiate (bulletTrail, firePoint.position, firePoint.rotation);
 				}
-			}
-			else
-			{
-				Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
-				RaycastHit2D hit = Physics2D.Raycast (firePointPosition, shootDir, 100, whatToHit);
-				Instantiate (bulletTrail, firePoint.position, firePoint.rotation);
-			}
+			} else
+				skip = false;
 		}
 
 	}
@@ -83,15 +89,18 @@ public class Player : MonoBehaviour {
 		Rigidbody2D rb = GetComponent<Rigidbody2D>();
 		if (col.gameObject.tag == "GoldCoin") {
 			score++;	//Worth 1 point
-			Destroy(col.gameObject);
-		}
-		else if (col.gameObject.tag == "RubyCoin") {
+			Destroy (col.gameObject);
+		} else if (col.gameObject.tag == "RubyCoin") {
 			score += 10;	//Worth 10 points
-			Destroy(col.gameObject);
-		}
-		else if (col.gameObject.tag == "DiamondCoin") {
+			Destroy (col.gameObject);
+		} else if (col.gameObject.tag == "DiamondCoin") {
 			score += 50;	//Worth 50 points
-
+			Destroy (col.gameObject);
+		} else if (col.gameObject.tag == "Enemy") {
+			bank += score;
+			//player dies
+			//display game over
+			//scene resets with main menu but amount in bank remains
 		}
 	}
 }

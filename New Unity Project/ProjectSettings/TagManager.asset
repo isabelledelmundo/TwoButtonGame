@@ -8,6 +8,7 @@ TagManager:
   - GoldCoin
   - DiamondCoin
   - RubyCoin
+  - Player1
   layers:
   - Default
   - TransparentFX
